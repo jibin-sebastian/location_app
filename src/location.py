@@ -33,7 +33,7 @@ def plot_locations(df, api_key):
             gmap.marker(lat, lon, title=row['Ort'])
     
     # save the map as image
-    gmap.draw("germany_map.html")
+    gmap.draw("index.html")
 
 # Main execution
 if __name__ == "__main__":
