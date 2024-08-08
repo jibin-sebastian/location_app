@@ -44,8 +44,8 @@ def plot_locations(df, poc_df, api_key):
 if __name__ == "__main__":
     main_file_path = "data/location_data.csv"  # Path to the main locations CSV file
     poc_file_path = "data/poc_details.csv"  # Path to the POC data CSV file
-    api_key = "AIzaSyBVii0lHnauDP5wSoiEoqDdf8tatWKYnPk"  # Replace with your actual Google Maps API key
-    #api_key = os.getenv("GOOGLE_MAPS_API_KEY")  # Read API key from environment variable
+    # api_key = " "  # Replace with your actual Google Maps API key
+    api_key = os.getenv("GOOGLE_MAPS_API_KEY")  # Read API key from environment variable
     
     df = read_csv(main_file_path)
     poc_df = read_csv(poc_file_path)
