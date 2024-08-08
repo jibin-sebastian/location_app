@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 from geopy.geocoders import Nominatim
 from gmplot import gmplot
 
@@ -17,29 +18,36 @@ def geocode_address(address):
         return None, None
 
 # Function to plot locations on Google Map
-def plot_locations(df, api_key):
+def plot_locations(df, poc_df, api_key):
     # Initialize the map to the center of Germany
     gmap = gmplot.GoogleMapPlotter(51.1657, 10.4515, 6, apikey=api_key)
     
-    latitudes = []
-    longitudes = []
-
+    # Plot main locations
     for index, row in df.iterrows():
         address = f"{row['Straße']}, {row['Ort']}, {row['PLZ']}, Germany"
         lat, lon = geocode_address(address)
         if lat and lon:
-            latitudes.append(lat)
-            longitudes.append(lon)
-            gmap.marker(lat, lon, title=row['Ort'])
+            gmap.marker(lat, lon, title=row['Ort'], color='red')
+
+    # Plot POC locations
+    for index, row in poc_df.iterrows():
+        address = f"{row['Ort']}, Germany"
+        lat, lon = geocode_address(address)
+        if lat and lon:
+            info = f"{row['poc_name']}, {row['contact_number']}, {row['Ort']}"
+            gmap.marker(lat, lon, title=info, color='blue')
     
-    # save the map as image
+    # Draw the map
     gmap.draw("index.html")
 
 # Main execution
 if __name__ == "__main__":
-    file_path = "data/location_data.csv"  # Update this path if necessary
-    api_key = "AIzaSyBVii0lHnauDP5wSoiEoqDdf8tatWKYnPk"  # Replace with your Google Maps API key
+    main_file_path = "data/location_data.csv"  # Path to the main locations CSV file
+    poc_file_path = "data/poc_details.csv"  # Path to the POC data CSV file
+    api_key = "AIzaSyBVii0lHnauDP5wSoiEoqDdf8tatWKYnPk"  # Replace with your actual Google Maps API key
+    #api_key = os.getenv("GOOGLE_MAPS_API_KEY")  # Read API key from environment variable
     
-    df = read_csv(file_path)
-    plot_locations(df, api_key)
-    print("Map has been created and saved as germany_map.html")
+    df = read_csv(main_file_path)
+    poc_df = read_csv(poc_file_path)
+    plot_locations(df, poc_df, api_key)
+    print("Map has been created and saved as index.html")
